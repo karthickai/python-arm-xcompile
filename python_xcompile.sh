@@ -1,63 +1,38 @@
 #!/bin/bash
 
-# change these to match your environment
-TARGET_HOST="arm-unknown-linux-gnueabi"
-CROSS_TOOLS_PATH=~/arm-toolchain/tools/$TARGET_HOST/bin
-BUILD_HOST="x86_64-linux-gnu"
+TARGET_HOST="arm-linux-gnueabihf"
+ROOT_FILESYSTEM="/usr/arm-linux-gnueabi/"
+BUILD_HOST="x86_64-linux-gnu" # find out with uname -m
+WORKING_DIRECTORY="python_xcompile"
+INSTALL_DIRECTORY="$WORKING_DIRECTORY/_install"
+PYTHON_VERSION="2.7.5"
 
-# you shouldn't need to change these
-PYTHON="Python-2.7.3"
-CONFIGURE_ARGS="--disable-ipv6"
-BUILD_LOG="build.log"
 
-# build log goes here
-rm -f $BUILD_LOG
-touch $BUILD_LOG
-echo "Build output will be in $BUILD_LOG"
+# Preparing compile environment
+export RFS="$ROOT_FILESYSTEM"
+PREFIX=$(readlink --no-newline --canonicalize "$INSTALL_DIRECTORY")
+mkdir -p "$WORKING_DIRECTORY"
+mkdir -p "$PREFIX"
 
-# download dist if it doesn't already exist
-if [ ! -f $PYTHON.tar.xz ] ; then
-    echo "Downloading $PYTHON .."
-    wget http://www.python.org/ftp/python/2.7.3/Python-2.7.3.tar.xz >> $BUILD_LOG
-fi
+# Step 1 - Downloading Python and xcompile patch
+cd $WORKING_DIRECTORY
+wget -c http://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tar.bz2
+wget -c http://bugs.python.org/file31991/Python-$PYTHON_VERSION-xcompile.patch
+rm -rf Python-$PYTHON_VERSION
+tar -jxf Python-$PYTHON_VERSION.tar.bz2
+cd Python-$PYTHON_VERSION
 
-rm -rf $PYTHON
-tar -xf $PYTHON.tar.xz
-cp -p files/config.site $PYTHON
-cd $PYTHON
-BUILD_LOG="../$BUILD_LOG"
-unset CROSS_COMPILE
+# Step 1 - Compile programs used by build System during build
+./configure
+make python Parser/pgen
+mv python python_for_build
+mv Parser/pgen Parser/pgen_for_build
 
-# ensure static glibc is installed
-rpm -qa | grep -q glibc-static
-if [ $? -eq 1 ] ; then
-    echo "Installing glibc-static (with sudo yum install) .."
-    sudo yum install -y glibc-static >> $BUILD_LOG
-fi
-
-set -e
-
-# first we need to build the host executables (python and Parser/pgen)
-echo "Stage 1: compiling host executables .."
-./configure $CONFIGURE_ARGS CONFIG_SITE="config.site" >> $BUILD_LOG
-make python Parser/pgen >> $BUILD_LOG
-mv python hostpython
-mv Parser/pgen Parser/hostpgen
+# Step 2 - Patch and Cross-Compile
+patch -p3 --input ../Python-$PYTHON_VERSION-xcompile.patch
 make distclean
-
-# set up environment for cross compile - we really shouldn't blindly add to PATH
-export PATH="$PATH:$CROSS_TOOLS_PATH"
-export CROSS_COMPILE=arm-unknown-linux-gnueabi-
-
-echo "Stage 1.5: patching Python for cross-compile .."
-patch -p0 < ../files/Python-2.7.3-xcompile.patch
-
-# cross compile
-echo "Stage 2: cross-compiling for $TARGET_HOST .."
-./configure $CONFIGURE_ARGS --build=$BUILD_HOST --host=$TARGET_HOST \
-    LDFLAGS="-static -static-libgcc" CPPFLAGS="-static" CONFIG_SITE="config.site" >> $BUILD_LOG
-sed -i '1r ../files/Setup' Modules/Setup
-make HOSTPYTHON=./hostpython HOSTPGEN=./Parser/hostpgen CROSS_COMPILE_TARGET=yes BUILDARCH=$BUILD_HOST HOSTARCH=$TARGET_HOST >> $BUILD_LOG
-
-sed -n -e '/Python build finished/,$p' $BUILD_LOG | grep -v 'install'
-file python
+./configure --host=$TARGET_HOST --build=$BUILD_HOST --prefix=$PREFIX
+    --disable-ipv6 ac_cv_file__dev_ptmx=no ac_cv_file__dev_ptc=no \
+    ac_cv_have_long_long_format=yes
+make
+make install

@@ -3,13 +3,12 @@ python-arm-xcompile
 
 This is a build script and patches for cross-compiling Python to target the ARM architecture.
 
-You must have a cross-compile toolchain already set up. [This guide](http://akanto.wordpress.com/2012/10/02/cross-compiling-kernel-for-raspberry-pi-on-fedora-17-part-2/) is an excellent resource for setting up crosstool-ng.
+You must have a cross-compile toolchain already set up (e.g. on Ubuntu run `sudo apt-get install gcc-arm-linux-gnueabihf`).
 
 1. Edit `python_xcompile.sh` and change the variables at the top to match your environment.
 2. Run `python_xcompile.sh`. This will download Python and build it for you.
 
-Assuming the build succeeds, a list of modules will be printed out. Some modules
-will not build statically since they need to be dynamically linked to glibc (TODO).
+Assuming the build succeeds, the Python distribution will be installed in `INSTALL_DIRECTORY`.
 
 Credits
 -------

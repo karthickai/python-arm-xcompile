@@ -28,7 +28,7 @@ mv python python_for_build
 mv Parser/pgen Parser/pgen_for_build
 
 # Step 2 - Patch and Cross-Compile
-patch -p3 --input ../files/Python-$PYTHON_VERSION-xcompile.patch
+patch -p3 --input ../files/Python-$PYTHON_VERSION-xcompile2.patch
 make distclean
 ./configure --host=$TARGET_HOST --build=$BUILD_HOST --prefix=$PREFIX
     --disable-ipv6 ac_cv_file__dev_ptmx=no ac_cv_file__dev_ptc=no \

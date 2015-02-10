@@ -13,6 +13,6 @@ Assuming the build succeeds, the Python distribution will be installed in `INSTA
 Credits
 -------
 
-* forked from [sjkingo/python-arm-xcompile](https://github.com/sjkingo/python-arm-xcompile)
+* Forked from [sjkingo/python-arm-xcompile](https://github.com/sjkingo/python-arm-xcompile).
 * The `files/Python-2.7.5-xcompile.patch` file is from the patch given by
 Trevor Bowen on the Python bug tracker [issue19142](http://bugs.python.org/issue19142).

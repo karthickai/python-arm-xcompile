@@ -14,10 +14,9 @@ PREFIX=$(readlink --no-newline --canonicalize "$INSTALL_DIRECTORY")
 mkdir -p "$WORKING_DIRECTORY"
 mkdir -p "$PREFIX"
 
-# Step 1 - Downloading Python and xcompile patch
+# Step 1 - Downloading Python and extracting
 cd $WORKING_DIRECTORY
 wget -c http://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tar.bz2
-wget -c http://bugs.python.org/file31991/Python-$PYTHON_VERSION-xcompile.patch
 rm -rf Python-$PYTHON_VERSION
 tar -jxf Python-$PYTHON_VERSION.tar.bz2
 cd Python-$PYTHON_VERSION
@@ -29,7 +28,7 @@ mv python python_for_build
 mv Parser/pgen Parser/pgen_for_build
 
 # Step 2 - Patch and Cross-Compile
-patch -p3 --input ../Python-$PYTHON_VERSION-xcompile.patch
+patch -p3 --input ../files/Python-$PYTHON_VERSION-xcompile.patch
 make distclean
 ./configure --host=$TARGET_HOST --build=$BUILD_HOST --prefix=$PREFIX
     --disable-ipv6 ac_cv_file__dev_ptmx=no ac_cv_file__dev_ptc=no \

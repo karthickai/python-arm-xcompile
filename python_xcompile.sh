@@ -10,9 +10,8 @@ PYTHON_VERSION="2.7.5"
 
 # Preparing compile environment
 export RFS="$ROOT_FILESYSTEM"
+mkdir -p "$INSTALL_DIRECTORY"
 PREFIX=$(readlink --no-newline --canonicalize "$INSTALL_DIRECTORY")
-mkdir -p "$WORKING_DIRECTORY"
-mkdir -p "$PREFIX"
 
 # Step 1 - Downloading Python and extracting
 cd $WORKING_DIRECTORY

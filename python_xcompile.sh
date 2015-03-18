@@ -6,6 +6,9 @@ BUILD_HOST="x86_64-linux-gnu" # find out with uname -m
 WORKING_DIRECTORY="python_xcompile"
 INSTALL_DIRECTORY="$WORKING_DIRECTORY/_install"
 PYTHON_VERSION="2.7.5"
+ENABLE_MODULES="array cmath binascii _collections cPickle cStringIO datetime
+_elementtree fcntl _functools itertools _io math operator _random select
+_socket _struct termios time unicodedata zlib"
 
 
 # Preparing compile environment
@@ -19,6 +22,12 @@ wget -c http://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.
 rm -rf Python-$PYTHON_VERSION
 tar -jxf Python-$PYTHON_VERSION.tar.bz2
 cd Python-$PYTHON_VERSION
+
+# Enable modules by uncommenting them in Modules/Setup.dist
+for module in $ENABLE_MODULES
+do
+    sed "s/^#$module/$module/" -i Modules/Setup.dist
+done
 
 # Step 1 - Compile programs used by build System during build
 ./configure

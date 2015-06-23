@@ -29,13 +29,13 @@ do
     sed "s/^#$module/$module/" -i Modules/Setup.dist
 done
 
-# Step 1 - Compile programs used by build System during build
+# Step 2 - Compile programs used by build System during build
 ./configure
 make python Parser/pgen
 mv python python_for_build
 mv Parser/pgen Parser/pgen_for_build
 
-# Step 2 - Patch and Cross-Compile
+# Step 3 - Patch and Cross-Compile
 patch -p3 --input ../files/Python-$PYTHON_VERSION-xcompile2.patch
 make distclean
 ./configure --host=$TARGET_HOST --build=$BUILD_HOST --prefix=$PREFIX \

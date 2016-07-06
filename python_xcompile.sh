@@ -33,7 +33,7 @@ done
 
 # Step 2 - Compile programs used by build System during build
 ./configure
-make python Parser/pgen
+make python Parser/pgen || exit 1
 mv python python_for_build
 mv Parser/pgen Parser/pgen_for_build
 

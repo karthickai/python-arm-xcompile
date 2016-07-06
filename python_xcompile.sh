@@ -6,6 +6,8 @@ BUILD_HOST="x86_64-linux-gnu" # find out with uname -m
 WORKING_DIRECTORY="python_xcompile"
 INSTALL_DIRECTORY="$WORKING_DIRECTORY/_install"
 PYTHON_VERSION="2.7.5"
+SOURCE_DIRECTORY="Python-$PYTHON_VERSION"
+PYTHON_ARCHIVE="Python-$PYTHON_VERSION.tar.xz"
 ENABLE_MODULES="array cmath binascii _collections cPickle cStringIO datetime
 _elementtree fcntl _functools itertools _io math operator _random select
 _socket _struct termios time unicodedata zlib"
@@ -18,10 +20,10 @@ PREFIX=$(readlink --no-newline --canonicalize "$INSTALL_DIRECTORY")
 
 # Step 1 - Downloading Python and extracting
 cd $WORKING_DIRECTORY
-wget -c http://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tar.bz2
-rm -rf Python-$PYTHON_VERSION
-tar -jxf Python-$PYTHON_VERSION.tar.bz2
-cd Python-$PYTHON_VERSION
+wget -c http://www.python.org/ftp/python/$PYTHON_VERSION/$PYTHON_ARCHIVE
+rm -rf $SOURCE_DIRECTORY
+tar -xf $PYTHON_ARCHIVE
+cd $SOURCE_DIRECTORY
 
 # Enable modules by uncommenting them in Modules/Setup.dist
 for module in $ENABLE_MODULES

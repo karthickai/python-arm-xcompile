@@ -1,7 +1,7 @@
 python-arm-xcompile
 ===================
 
-This is a build script and patches for cross-compiling Python to target the ARM architecture.
+This is a build script for cross-compiling Python to target the ARM architecture.
 
 You must have a cross-compile toolchain already set up (e.g. on Ubuntu run `sudo apt-get install gcc-arm-linux-gnueabihf`).
 
@@ -10,9 +10,7 @@ You must have a cross-compile toolchain already set up (e.g. on Ubuntu run `sudo
 
 Assuming the build succeeds, the Python distribution will be installed in `INSTALL_DIRECTORY`.
 
-Credits
--------
+The script was tested with Python 2.7.12 under Ubuntu Xenial 16.04.
 
-* Forked from [sjkingo/python-arm-xcompile](https://github.com/sjkingo/python-arm-xcompile).
-* The `files/Python-2.7.5-xcompile2.patch` file is modified from the patch given by
-Trevor Bowen on the Python bug tracker [issue19142](http://bugs.python.org/issue19142).
+With Python 2.7.12 cross-compiling got easier since no patching is required.
+For cross-compiling older Python version, check the python-2.7.5 branch of this repository.

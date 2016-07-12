@@ -34,7 +34,8 @@ done
 # Step 3 - Cross-Compile
 make distclean
 ./configure --host=$TARGET_HOST --build=$BUILD_HOST --prefix=$PREFIX \
-    --disable-ipv6 ac_cv_file__dev_ptmx=no ac_cv_file__dev_ptc=no \
+    --disable-ipv6 --enable-unicode=ucs4 \
+    ac_cv_file__dev_ptmx=no ac_cv_file__dev_ptc=no \
     ac_cv_have_long_long_format=yes
 make
 make install

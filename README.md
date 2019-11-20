@@ -10,7 +10,7 @@ You must have a cross-compile toolchain already set up (e.g. on Ubuntu run `sudo
 
 Assuming the build succeeds, the Python distribution will be installed in `INSTALL_DIRECTORY`.
 
-The script was tested with Python 2.7.12 under Ubuntu Xenial 16.04.
+The script was tested with Python 3.6.8 under Ubuntu 18.04.
 
-With Python 2.7.12 cross-compiling got easier since no patching is required.
+With Python 3.6.8 cross-compiling got easier since no patching is required.
 For cross-compiling older Python version, check the python-2.7.5 branch of this repository.
